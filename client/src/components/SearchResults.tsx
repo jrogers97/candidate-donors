@@ -7,26 +7,33 @@ import { Candidate } from "../interfaces";
 const MAX_CANDS = 7;
 
 const SearchResults = () => {
-    const { 
-        searchedCandidates: cands, 
-        searchResultsVisible,
-        inputFocused,
-        setSearchResultsVisible,
-        setSelectedCandidate,
-        setSelectedCandidateData
-    } = useContext(CandidatesContext);
+	const {
+		searchedCandidates: cands,
+		searchResultsVisible,
+		inputFocused,
+		setSearchResultsVisible,
+		setSelectedCandidate,
+		setSelectedCandidateData,
+	} = useContext(CandidatesContext);
 
-    const [focusedCandidateIdx, setFocusedCandidateIdx] = useState(0); 
+	const [focusedCandidateIdx, setFocusedCandidateIdx] = useState(0);
 
-     const handleCandidateClick = useCallback(async (candidate: Candidate) => {
-        // remove existing candidate data and await new candidate data
-        setSearchResultsVisible(false); 
-        setSelectedCandidateData(null);
-        setSelectedCandidate(candidate);
-        setSelectedCandidateData(await getAllCandidateData(candidate.cid));
-    }, [setSelectedCandidate, setSelectedCandidateData, setSearchResultsVisible]);
+	const handleCandidateClick = useCallback(
+		async (candidate: Candidate) => {
+			// remove existing candidate data and await new candidate data
+			setSearchResultsVisible(false);
+			setSelectedCandidateData(null);
+			setSelectedCandidate(candidate);
+			setSelectedCandidateData(await getAllCandidateData(candidate.cid));
+		},
+		[
+			setSelectedCandidate,
+			setSelectedCandidateData,
+			setSearchResultsVisible,
+		]
+	);
 
-    useEffect(() => {
+	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			// bind listener to move up and down search results
 			if (searchResultsVisible && cands?.length) {
@@ -38,10 +45,7 @@ const SearchResults = () => {
 					// DOWN ARROW
 					e.preventDefault();
 					setFocusedCandidateIdx((prev) =>
-						Math.min(
-							prev + 1,
-							Math.min(cands.length - 1, MAX_CANDS)
-						)
+						Math.min(prev + 1, Math.min(cands.length - 1, MAX_CANDS))
 					);
 				} else if (e.keyCode === 27) {
 					// ESC
@@ -71,12 +75,14 @@ const SearchResults = () => {
 		inputFocused,
 	]);
 
-    useEffect(() => {
-        // make sure focused cand idx is in range of shown results
-        if (cands && cands.length) {
-            setFocusedCandidateIdx(prev => Math.min(prev, Math.min(cands.length - 1, MAX_CANDS)));
-        }
-    }, [cands]);
+	useEffect(() => {
+		// make sure focused cand idx is in range of shown results
+		if (cands && cands.length) {
+			setFocusedCandidateIdx((prev) =>
+				Math.min(prev, Math.min(cands.length - 1, MAX_CANDS))
+			);
+		}
+	}, [cands]);
 
 	return (
 		<div>
@@ -86,10 +92,10 @@ const SearchResults = () => {
 						.fill(null)
 						.map((_, i) => (
 							<ListItem
-                                key={cands[i].cid}
-                                focused={cands[focusedCandidateIdx]?.cid === cands[i].cid}
-                                onClick={() => handleCandidateClick(cands[i])}
-                                onMouseEnter={() => setFocusedCandidateIdx(i)}
+								key={cands[i].cid}
+								focused={cands[focusedCandidateIdx]?.cid === cands[i].cid}
+								onClick={() => handleCandidateClick(cands[i])}
+								onMouseEnter={() => setFocusedCandidateIdx(i)}
 							>
 								{`${cands[i].crpName} 
                                  (${cands[i].party}) 
@@ -103,8 +109,8 @@ const SearchResults = () => {
 };
 
 const List = styled.ul`
-    position: absolute;
-    background-color: white;
+	position: absolute;
+	background-color: white;
 	max-height: 210px;
 	overflow-y: scroll;
 	list-style: none;
@@ -120,12 +126,13 @@ const List = styled.ul`
 const ListItem = styled.li`
 	padding: 4px;
 	border-radius: 4px;
-    cursor: pointer;
-    background-color: ${(props: StyledListItemProps) => props.focused ? "#eee" : "#fff"};
+	cursor: pointer;
+	background-color: ${(props: StyledListItemProps) =>
+		props.focused ? "#eee" : "#fff"};
 `;
 
 interface StyledListItemProps {
-    focused?: boolean
+	focused?: boolean;
 }
 
 export default SearchResults;
