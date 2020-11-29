@@ -51,7 +51,7 @@ const SearchInput = () => {
 	};
 
 	return (
-		<div>
+		<StyledSearchInput>
 			<Label htmlFor="search-input">Search for a 2020 candidate</Label>
 			<Input
 				id="search-input"
@@ -69,12 +69,19 @@ const SearchInput = () => {
 					searchResultsVisible
 				}
 			/>
-		</div>
+		</StyledSearchInput>
 	);
 };
 
+
+const StyledSearchInput = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+`;
+
 const Input = styled.input`
-	width: 100%;
 	padding: 10px;
 	border: 1px solid #bbb;
 	outline: none;

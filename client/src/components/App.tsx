@@ -10,9 +10,11 @@ const App = () => {
 		<StyledApp>
 			<CandidatesProvider>
 				<ComponentContainer>
-					<SearchInput />
-					<SearchResults />
-                    <SelectedCandidateInfo />
+					<SearchContainer>
+						<SearchInput />
+						<SearchResults />
+					</SearchContainer>
+					<SelectedCandidateInfo />
 				</ComponentContainer>
 			</CandidatesProvider>
 		</StyledApp>
@@ -27,10 +29,17 @@ const StyledApp = styled.div`
 `;
 
 const ComponentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 100px 0;
+`;
+
+const SearchContainer = styled.div`
     position: relative;
     width: 70%;
     max-width: 400px;
-    margin-top: 100px;
 `;
 
 export default App;

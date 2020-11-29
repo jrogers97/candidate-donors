@@ -6,6 +6,14 @@ import { Candidate } from "../interfaces";
 
 const MAX_CANDS = 7;
 
+const formatPartyAndStateInfo = (cand: Candidate) => {
+    const { party, distIDRunFor } = cand;
+    if (distIDRunFor === "PRES") {
+        return `${party}-Pres.`;
+    }
+    return `${party}-${distIDRunFor.slice(0, 2)}`;
+}
+
 const SearchResults = () => {
 	const {
 		searchedCandidates: cands,
@@ -24,7 +32,7 @@ const SearchResults = () => {
 			setSearchResultsVisible(false);
 			setSelectedCandidateData(null);
 			setSelectedCandidate(candidate);
-			setSelectedCandidateData(await getAllCandidateData(candidate.cid));
+			setSelectedCandidateData(await getAllCandidateData(candidate));
 		},
 		[
 			setSelectedCandidate,
@@ -85,7 +93,7 @@ const SearchResults = () => {
 	}, [cands]);
 
 	return (
-		<div>
+		<StyledSearchResults>
 			{searchResultsVisible && cands && !!cands.length && (
 				<List>
 					{Array(Math.min(cands.length, 8))
@@ -97,16 +105,19 @@ const SearchResults = () => {
 								onClick={() => handleCandidateClick(cands[i])}
 								onMouseEnter={() => setFocusedCandidateIdx(i)}
 							>
-								{`${cands[i].crpName} 
-                                 (${cands[i].party}) 
-                                 ${cands[i].distIDRunFor}`}
+								{`${cands[i].crpName}  `}
+                                <CandidatePartyInfo>{`(${formatPartyAndStateInfo(cands[i])})`}</CandidatePartyInfo>
 							</ListItem>
 						))}
 				</List>
 			)}
-		</div>
+		</StyledSearchResults>
 	);
 };
+
+const StyledSearchResults = styled.div`
+    width: 100%;
+`;
 
 const List = styled.ul`
 	position: absolute;
@@ -116,7 +127,7 @@ const List = styled.ul`
 	list-style: none;
 	padding: 16px 10px 10px 10px;
 	margin: 0px 0 0 0;
-	width: 100%;
+	width: calc(100% - 22px);
 	border: 1px solid #bbb;
 	border-top: none;
 	border-bottom-left-radius: 8px;
@@ -126,9 +137,14 @@ const List = styled.ul`
 const ListItem = styled.li`
 	padding: 4px;
 	border-radius: 4px;
-	cursor: pointer;
+    cursor: pointer;
+    font-weight: 500;
 	background-color: ${(props: StyledListItemProps) =>
 		props.focused ? "#eee" : "#fff"};
+`;
+
+const CandidatePartyInfo = styled.span`
+    font-size: 13px;
 `;
 
 interface StyledListItemProps {
